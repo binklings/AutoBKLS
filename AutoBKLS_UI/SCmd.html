@@ -1,0 +1,90 @@
+<!--
+    THIS FILE IS PART OF AutoBKLS PROJECT
+    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
+    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
+    Copyright (c) 2023 binklings.com
+    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Three.js Cube with Textures and Text</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/three@0.130.1/build/three.min.js"></script>
+    <script>
+        var scene, camera, renderer, cube, loader, materialArray = [], texture_ft, texture_bk, texture_up, texture_dn, texture_rt, texture_lf;
+
+        // 创建场景
+        scene = new THREE.Scene();
+
+        // 创建相机
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // 创建渲染器
+        renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 加载字体
+        loader = new THREE.FontLoader();
+        loader.load('https://unpkg.com/three@0.153.0/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+            var geometry, material, mesh;
+
+            // 加载纹理并创建立方体
+            loader = new THREE.TextureLoader();
+            texture_ft = loader.load('./bg2.jpg');
+            texture_bk = loader.load('bg2.jpg');
+            texture_up = loader.load('bg2.jpg');
+            texture_dn = loader.load('bg2.jpg');
+            texture_rt = loader.load('bg2.jpg');
+            texture_lf = loader.load('bg2.jpg');
+
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_ft }));
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_bk }));
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_up }));
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_dn }));
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_rt }));
+            materialArray.push(new THREE.MeshBasicMaterial({ map: texture_lf }));
+
+            geometry = new THREE.BoxGeometry(1, 1, 1);
+            material = new THREE.MeshBasicMaterial( { color: "blue" } );
+            cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+
+            // 创建文字并添加到场景
+            material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            ['launched', 'not', 'is', 'service', 'this', 'Sorry'].forEach(function(text, index) {
+                geometry = new THREE.TextGeometry(text, {
+                    font: font,
+                    size: 0.1,
+                    height: 0.02,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.005,
+                    bevelSize: 0.001,
+                    bevelOffset: 0.001,
+                    bevelSegments: 5
+                });
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(-0.5, index * 0.4 - 1, 0.5);
+                cube.add(mesh);
+            });
+
+            // 渲染循环
+            function animate() {
+                requestAnimationFrame(animate);
+                cube.rotation.y += 0.02;
+                renderer.render(scene, camera);
+            }
+            animate();
+        });
+    </script>
+</body>
+</html>

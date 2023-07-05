@@ -1,0 +1,59 @@
+<!--
+    THIS FILE IS PART OF AutoBKLS PROJECT
+    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
+    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
+    Copyright (c) 2023 binklings.com
+    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
+-->
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+  </head>
+<body bgcolor="black" style="background-color: black;background-image: url(../res/bg1.jpeg);background-size:cover">
+ <div align="center" style="padding: 5px">
+  <div id="p3" class="mdl-progress mdl-js-progress" style="top: 40%;width: 100%;position: fixed"></div>
+  <div style="height: 40%"></div>
+   <h5 style="color: white;" id="text">Checking for updates</h5>
+   <h6 style="color: white;font-size: 10px;" id="text2">如果这个过程持续很久,请检查您与Github Pages服务器的网络连接,并重启程序</h6>
+   <script>
+   var url = location.search;
+   var theRequest = new Object();
+   if (url.indexOf("?") != -1){
+    var str = url.substr(1);
+    i = Number(str)
+   }
+   document.querySelector('#p3').addEventListener('mdl-componentupgraded', function() {
+    this.MaterialProgress.setProgress(i);
+    this.MaterialProgress.setBuffer(i+10);
+   });
+   if(i==50){
+       document.getElementById('text').textContent = 'Initializing 50%'
+   }
+   setTimeout(function() {
+       document.getElementById('text2').textContent = "真糟糕,我们似乎无法连接到Github Pages服务器,AutoBKLS将跳过检查更新"
+   }, 5000);
+   setInterval('add()',10)
+   function add(){
+       i++
+       if(i==50){
+           i=49
+       }else if(i==100){
+           i=99
+       }else{
+           document.querySelector('#p3').MaterialProgress.setProgress(i);
+           document.querySelector('#p3').MaterialProgress.setBuffer(i+10);
+           if(i>=50){
+               document.getElementById('text').textContent = 'Initializing '+i+'%'
+               document.getElementById('text2').textContent = "一切交给我来处理,请稍后..."
+           }
+       }
+   }
+  </script>
+ </div>
+</body>
+</html>

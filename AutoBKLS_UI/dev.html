@@ -1,0 +1,91 @@
+<!--
+    THIS FILE IS PART OF AutoBKLS PROJECT
+    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
+    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
+    Copyright (c) 2023 binklings.com
+    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
+-->
+
+<meta charset="UTF-8">
+<body bgcolor="black" style="background-image: url('../res/bg1.jpeg');background-size:cover;background-color: black;">
+    <div style="width: 100%;height: 100%;" align="center">
+        <div id="overlay" align="center" style="width: 80%;top: 35%;left: 10%;position: fixed"></div>
+    </div>
+</body>
+<script>
+now = 0
+overlay = document.getElementById('overlay');
+function printString(str) {
+	var outputEl = document.createElement('h3');
+	outputEl.id = 'output'
+	outputEl.style.color = "white"
+	overlay.appendChild(outputEl)
+	var index = 0;
+	var intervalId = setInterval(function() {
+	    outputEl.textContent += str[index];
+		index++;
+		if (index === str.length) {
+			clearInterval(intervalId);
+			outputEl.innerHTML += '<br><br><a style="color: white;font-size: 6sp" onclick="next()">-Next-</a>'
+		}
+	}, 25);
+}
+
+printString('Hello, welcome to BINKLINGS START Developer Platform');
+
+function next(){
+    i = 35
+    var interval = setInterval(function() {
+	    overlay.style.top = i+"%"
+	    i--
+		if(i==-35) {
+			clearInterval(interval);
+			now++
+			add()
+		}
+	}, 1);
+}
+
+function add(){
+    overlay.innerHTML = ""
+    i = 100
+    var interval = setInterval(function() {
+	    overlay.style.top = i+"%"
+	    i--
+		if(i==35) {
+			clearInterval(interval);
+		}
+	}, 1);
+    switch (true) {
+	    case now==1:
+			printString('In the current mode, you can develop various plug-ins or code for AutoBKLS v2 through this official platform');
+		    break;
+	    
+		case now==2:
+			printString('You can also contribute your special scripts/code to our open source community (Github repository).');
+		    break;
+		
+		case now==3:
+			printString('Now, please bind your Github account');
+		    break;
+		
+		case now==4:
+		    login()
+		    break;
+		
+	    default:
+	        break;
+	}
+}
+
+
+const config = {
+  'oauth_uri': 'https://github.com/login/oauth/authorize',
+  'redirect_uri': 'https://www.binklings.com/login',
+  'client_id': 'c9de9d0f1afddb5be549',
+};
+function login(){
+ window.localStorage.preventHref = window.location.href
+ window.location.href = `${config.oauth_uri}?client_id=${config.client_id}&redirect_uri=${config.redirect_uri}`
+}
+</script>

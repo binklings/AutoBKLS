@@ -1,0 +1,111 @@
+<!--
+    THIS FILE IS PART OF AutoBKLS PROJECT
+    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
+    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
+    Copyright (c) 2023 binklings.com
+    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
+-->
+
+<html>
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+ <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+ <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+<body bgcolor="black">
+ 
+ <style>
+ .demo-layout-transparent .mdl-layout__header,
+ .demo-layout-transparent .mdl-layout__drawer-button {
+  color: white;
+ }
+ 
+.popup-top {
+  position: fixed;
+  top: 20px;
+  right: -300px;
+  width: 280px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  opacity: 0;
+  animation: popin-left 0.5s forwards, fadeout 1s 1.5s forwards;
+  color: black
+}
+@keyframes popin-left {
+  0% {
+    right: -300px;
+    opacity: 0;
+  }
+  100% {
+    right: 20px;
+    opacity: 1;
+  }
+}
+@keyframes popin-top {
+  0% {
+    top: -300px;
+    right: 20px;
+    bottom: auto;
+    opacity: 0;
+  }
+  100% {
+    top: 20px;
+    right: 20px;
+    bottom: auto;
+    opacity: 1;
+  }
+}
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.popup-content {
+  padding: 10px;
+  font-size: 16px
+}
+.popup .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.2s;
+}
+.popup .close:hover {
+  color: #333;
+}
+ </style>
+ <br>
+ <div class="demo-layout-transparent mdl-layout mdl-js-layout" style="top: 0px;position: fixed">
+  <main class="mdl-layout__content">
+   
+   <div id="my-list" align="center"></div>
+   <script>
+    var url = location.search;
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1){
+     files_text = url.substr(1);
+    }
+    const str = files_text
+    const strs = str.split(";");
+    const list = document.getElementById("my-list");
+    for (let i = 1; i < strs.length-1; i++) {
+      const newDiv = document.createElement("div");
+      newDiv.innerHTML = '<span class="mdl-chip mdl-chip--contact"><span class="mdl-chip__contact mdl-color--teal mdl-color-text--white">'+decodeURI(strs[i]).charAt(0)+'</span><span class="mdl-chip__text">'+decodeURI(strs[i])+'</span><a href="#edit;'+decodeURI(strs[i])+'" class="mdl-chip__action"><i class="material-icons">edit</i></a><a href="#del;'+decodeURI(strs[i])+'" class="mdl-chip__action"><i class="material-icons">delete</i></a></span>'
+      list.appendChild(newDiv);
+    }
+   </script>
+ 
+ 
+ </main>
+</body>
+</html>

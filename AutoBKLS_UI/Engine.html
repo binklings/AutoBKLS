@@ -1,0 +1,406 @@
+<!--
+    THIS FILE IS PART OF AutoBKLS PROJECT
+    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
+    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
+    Copyright (c) 2023 binklings.com
+    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
+-->
+
+<html>
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+ <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+ <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</head>
+<body bgcolor="black">
+<div align="center">
+<br>
+<h5 style="color: white">AutoBKLS Editor</h5>
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" style="color: lawngreen;font-size: 18px" onclick="pack(true)">&#9654;</button></button>
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="pack(false)">&#128190;</button>
+<table class="mdl-data-table mdl-js-data-table mdl-data-table mdl-shadow--2dp" style="border-radius: 5px;width: 90%">
+  <thead>
+    <tr>
+      <th>节点</th>
+      <th>数据</th>
+      <th>编辑</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    
+  </tbody>
+</table>
+</div>
+</body>
+<script defer>
+var url = location.search;
+var theRequest = new Object();
+if (url.indexOf("?") != -1){
+   files_text = decodeURI(url.substr(1))
+   //code(files_text)该方法因url长度限制已废弃,改用新方法请见Editor.js的第30行代码附近
+}
+//code('sleep,1000;click,100 200')
+/*code格式:
+ 节点名1(解释内容),数据内容1,数据输入提示文字1;节点名2(解释内容),数据内容2,数据输入提示文字2;
+ 分号隔开行,逗号隔开列,节点名的括号里的提示内容不被读取,可用于翻译
+*/
+//final_length实时统计长度
+//i只增不减,每个tr的唯一id,不可重复利用
+function code(text){
+ final_length = 0
+ codes = text.split(';')
+ html = ''
+ i=0
+ for(i=0;i<codes.length;i++){
+  var data = codes[i].split(",")
+  switch (true) {
+      case data[0]=="sleep":
+          data[0] += "(延时)"
+          data[2] = "时间ms"
+          break;
+      case data[0]=="click":
+          data[0] += "(点击)"
+          data[2] = "坐标x[空格]y 或 识别并点击的文字"
+          break;
+      case data[0]=="click_text":
+          data[0] += "(点击文字)"
+          data[2] = "文字内容 设置选项"
+          break;
+      case data[0]=="get_text":
+          data[0] += "(获取文字)"
+          data[2] = "设为的变量"
+          break;
+      case data[0]=="press":
+          data[0] += "(按压)"
+          data[2] = "坐标x[空格]y 设置选项"
+          break;
+      case data[0]=="swipe":
+          data[0] += "(滑动)"
+          data[2] = "x1 y1 x2 y2 时间ms"
+          break;
+      case data[0]=="launch":
+          data[0] += "(启动APP)"
+          data[2] = "app包名"
+          break;
+      case data[0]=="clickCtrl":
+          data[0] += "(点击控件)"
+          data[2] = "控件id"
+          break;
+      case data[0]=="goto":
+          data[0] += "(跳转执行)"
+          data[2] = "至第x行(0开始)"
+          break;
+      case data[0]=="var":
+          data[0] += "(定义变量)"
+          data[2] = "变量名"
+          break;
+      case data[0]=="js":
+          data[0] += "(js运算)"
+          data[2] = "js代码"
+          break;
+      default:
+          data[0] += "!Bad Node!"
+          data[2] = "This node is corrupted"
+  }
+  html += `<tr id="tr_`+i+`">
+      <td class="mdl-data-table__cell--non-numeric" id="td1_`+i+`" style="padding:5px" onclick="showDoc('`+data[0]+`')">`+data[0]+`</td>
+      <td style="padding:5px"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%" align="left"><input class="mdl-textfield__input" type="text" value="`+data[1]+`" id="td2_`+i+`"><label class="mdl-textfield__label">`+data[2]+`</label></div></td>
+      <td style="padding:5px"><i class="material-icons" onclick="adding_tr('tr_`+i+`')">add</i><i class="material-icons" onclick="delete_tr(`+i+`)">delete</i></td>
+    </tr>`
+    final_length++
+ }
+ document.getElementById('tbody').innerHTML = html
+ setTimeout('componentHandler.upgradeAllRegistered()',10)
+}
+function delete_tr(id){
+ document.getElementById('tr_'+id).remove()
+ final_length--
+}
+function adding_tr(id){
+ showAlert(1,`
+ <h5>添加节点</h5>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['sleep',1000],'`+id+`')">延时</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['click','200 300'],'`+id+`')">点击(坐标或文字)</button>
+  <br>
+  <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['click_text','文字 5 5 200 50'],'`+id+`')">点击文字(高级)</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['get_text','a'],'`+id+`')">识别屏幕文字</button>
+  <br>
+  <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['press','200 300 5 5 1000 100'],'`+id+`')">长按(高级)</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['swipe','200 300 200 600 500'],'`+id+`')">滑动(高级)</button>
+  <br>
+  <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['launch','com.xxx.xxx'],'`+id+`')">启动APP</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['clickCtrl','tv.danmaku.bili:id/frame_recommend'],'`+id+`')">点击控件</button>
+  <br>
+  <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['goto','0'],'`+id+`')">跳转</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['var','x'],'`+id+`')">定义变量</button>
+  <br>
+  <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['js','return Number(%%x/)+10'],'`+id+`')">js计算</button>
+  <br>
+  <br>
+  <h6>为保证正常运行,当前测试版本删减了很多节点,以确保新功能不受干扰</h6>
+ `)
+ //add_tr(['sleep',999])
+}
+function add_tr(data,id){
+ switch (true) {
+      case data[0]=="sleep":
+          data[0] += "(延时)"
+          data[2] = "时间ms"
+          break;
+      case data[0]=="click":
+          data[0] += "(点击)"
+          data[2] = "坐标x[空格]y 或 识别并点击的文字"
+          break;
+      case data[0]=="click_text":
+          data[0] += "(点击文字)"
+          data[2] = "文字内容 设置选项"
+          break;
+      case data[0]=="get_text":
+          data[0] += "(获取文字)"
+          data[2] = "设为的变量"
+          break;
+      case data[0]=="press":
+          data[0] += "(按压)"
+          data[2] = "坐标x[空格]y 设置选项"
+          break;
+      case data[0]=="swipe":
+          data[0] += "(滑动)"
+          data[2] = "x1 y1 x2 y2 时间ms"
+          break;
+      case data[0]=="launch":
+          data[0] += "(启动APP)"
+          data[2] = "app包名"
+          break;
+      case data[0]=="clickCtrl":
+          data[0] += "(点击控件)"
+          data[2] = "控件id"
+          break;
+      case data[0]=="goto":
+          data[0] += "(跳转执行)"
+          data[2] = "至第x行(0开始)"
+          break;
+      case data[0]=="var":
+          data[0] += "(定义变量)"
+          data[2] = "变量名"
+          break;
+      case data[0]=="js":
+          data[0] += "(js运算)"
+          data[2] = "js代码"
+          break;
+      default:
+          // code
+  }
+  
+  pack2(data,id)
+}
+
+
+function pack(runCode){
+ iPack = 0
+ iTrue = 0
+ p_html = ''
+ while(true){
+  if(iTrue==final_length){
+      if(runCode==true){
+          console.log("run;;" + p_html)
+      }else{
+          console.log("save;;" + p_html)
+      }
+   break;
+  }else{
+   if(document.getElementById('tbody').innerHTML.split('<tr id="')[iPack]){
+       var split_html_0 = document.getElementById('tbody').innerHTML.split('<tr id="')[iPack].split('</tr>')[0]
+       var split_html_1 = split_html_0.split('>')[2].split('<')[0].split('(')[0]
+       var split_html_2 = split_html_0.split('"')[0].split('tr_')[1]
+       var split_html_3 = document.getElementById('td2_'+split_html_2).value
+       p_html += ';' + split_html_1 + ',' + split_html_3
+       iTrue++
+   }
+  }
+  iPack++
+ }
+}
+
+function pack2(data,id){
+ iPack = 0
+ iTrue = 0
+ p_html = ''
+ p_last_html = false
+ while(true){
+  if(iTrue==final_length){
+      
+  var split_html_0 = p_html.split('<tr id="'+id+'">')[0]
+  var split_html_1 = p_html.split('<tr id="'+id+'">')[1]
+  var split_html_2 = split_html_1.split('</tr>')[0]
+  
+  document.getElementById('tbody').innerHTML = split_html_0 + '<tr id="'+id+'">' + split_html_2 + '</tr>' + `<tr id="tr_`+i+`">
+      <td class="mdl-data-table__cell--non-numeric" id="td1_`+i+`" style="padding:5px" onclick="showDoc('`+data[0]+`')">`+data[0]+`</td>
+      <td style="padding:5px"><div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%" align="left"><input class="mdl-textfield__input" type="text" value="`+data[1]+`" id="td2_`+i+`"><label class="mdl-textfield__label">`+data[2]+`</label></div></td>
+      <td style="padding:5px"><i class="material-icons" onclick="adding_tr('tr_`+i+`')">add</i><i class="material-icons" onclick="delete_tr(`+i+`)">delete</i></td>
+    </tr>` + split_html_1.split(split_html_2)[1]
+  componentHandler.upgradeAllRegistered();
+  
+  desAlert()
+  i++
+  final_length++
+   
+   break;
+  }else{
+   if(document.getElementById('tbody').innerHTML.split('<tr id="')[iPack]){
+       p_last_html = p_html
+       var split_html_0 = document.getElementById('tbody').innerHTML.split('<tr id="')[iPack].split('</tr>')[0]
+       var split_html_2 = split_html_0.split('"')[0].split('tr_')[1]
+       var split_html_4 = split_html_0.split('value="')[0]
+       var split_html_3 = document.getElementById('td2_'+split_html_2).value
+       var split_html_3_2 = split_html_0.split('value="')[1].split('"')[0]
+       var split_html_5 = split_html_0.split(split_html_4+'value="'+split_html_3_2)[1]
+       p_html += '<tr id="'+split_html_4+'value="'+split_html_3+split_html_5+'</tr>'
+       iTrue++
+   }
+  }
+  iPack++
+ }
+}
+
+
+
+function showDoc(node){
+    var data = node.split("(")
+    switch (true) {
+      case data[0]=="sleep":
+          alert("延时xxx毫秒,输入一个数字,单位为毫秒")
+          break;
+      case data[0]=="click":
+          alert("点击坐标或文字,输入一个坐标 x[空格]y 或 [文字xxx],坐标可使用悬浮窗工具获取")
+          break;
+      case data[0]=="click_text":
+          alert("通过搜索控件点击指定文字,输入格式: [文字xxx] [随机x位置偏离,一个数字] [随机y位置偏离,一个数字] [按压时长,一个数字,单位毫秒] [按压时长偏离,一个数字,单位毫秒] , 偏离是指在原有数字基础上在运行时随机偏移(加或减)")
+          break;
+      case data[0]=="get_text":
+          alert("通过Paddle OCR获取屏幕全部文字(需要截图权限,全部信息在本地处理)及其属性,输入一个变量名字,将识别结果(字符串)设置到该变量中")
+          break;
+      case data[0]=="press":
+          alert("长按坐标位置,输入格式: x y [随机x位置偏离,一个数字] [随机y位置偏离,一个数字] [按压时长,一个数字,单位毫秒] [按压时长偏离,一个数字,单位毫秒] , 偏离是指在原有数字基础上在运行时随机偏移(加或减),x y是按压坐标")
+          break;
+      case data[0]=="swipe":
+          alert("从一个坐标滑动到另一个坐标(模拟滑动屏幕),输入格式: x1 y1 x2 y2 time , 其中x1和y1是起始坐标,x2和y2是结束坐标,time是用时,单位毫秒,坐标可使用悬浮窗工具获取")
+          break;
+      case data[0]=="launch":
+          alert("启动一个app,输入该app的包名(字符串)")
+          break;
+      case data[0]=="clickCtrl":
+          alert("点击一个控件,控件是安卓中任何一个界面的组成部分,输入viewId(即控件id,可使用悬浮窗工具获取屏幕上某个控件的id,若id为null则此方法不可用)")
+          break;
+      case data[0]=="goto":
+          alert("跳转至第x行执行,从第0算起,即第一行是0")
+          break;
+      case data[0]=="var":
+          alert("定义一个新变量,在其它节点通过 %%x/ 即可调用名为x的变量,此节点输入新变量名")
+          break;
+      case data[0]=="js":
+          alert("调用autox.js进行函数运算,此处若要AutoBKLS与js通信,请用 %%x/ 来调用名为x的AutoBKLS中的变量在js中执行,在js中用return方法可回调AutoBKLS,默认将返回值设到名为jsr的变量中,此处输入js代码,可使用转义换行符\\n")
+          break;
+      default:
+          alert("这是一个损坏的节点,请查阅文档获取相关信息")
+          break;
+    }
+}
+
+function showAlert(mode,href) {
+fullScreenDiv = document.createElement('div');
+fullScreenDiv.style.position = 'fixed';
+fullScreenDiv.style.top = 0;
+fullScreenDiv.style.left = 0;
+fullScreenDiv.style.width = '100%';
+fullScreenDiv.style.height = '100%';
+fullScreenDiv.style.background = 'rgba(0, 0, 0, 0.5)';
+fullScreenDiv.style.display = 'none';
+
+var whiteDiv = document.createElement('div');
+whiteDiv.style.width = '90%';
+whiteDiv.style.height = '90%';
+whiteDiv.style.backgroundColor = '#EEE8F4';
+whiteDiv.style.borderRadius = '5px';
+whiteDiv.style.position = 'absolute';
+whiteDiv.style.top = '50%';
+whiteDiv.style.left = '50%';
+whiteDiv.style.transform = 'translate(-50%, -50%)';
+whiteDiv.style.opacity = 0;
+whiteDiv.style.fontSize = '20px'
+whiteDiv.style.overflowY = 'auto'
+whiteDiv.align = 'center'
+fullScreenDiv.appendChild(whiteDiv);
+
+var iframe = document.createElement('iframe');
+iframe.src = href
+iframe.style.width = '100%';
+iframe.style.height = '100%';
+iframe.style.border = 'none'
+iframe.style.borderRadius = '5px';
+
+var close = document.createElement('button');
+close.style.position = 'absolute';
+close.style.top = '0px'
+close.style.right = '0px'
+close.style.width = '50px'
+close.style.height = '35px'
+close.style.border = 'none'
+close.style.borderRadius = '5px';
+close.innerHTML = 'X'
+close.style.color = 'red'
+close.onclick = function(){
+ desAlert()
+}
+
+if(mode==0){
+whiteDiv.appendChild(iframe)
+}else{
+whiteDiv.innerHTML = '</br>'+href
+}
+whiteDiv.appendChild(close)
+
+setTimeout(function(){
+ document.body.appendChild(fullScreenDiv)
+ fadeIn(whiteDiv, fullScreenDiv, 10);
+ fullScreenDiv.style.display = 'block';
+ componentHandler.upgradeAllRegistered();
+},10)
+
+function fadeIn(elem, elem2, speed) {
+let op = 0.01;
+elem.style.opacity = op;
+elem2.style.opacity = op;
+
+let timer = setInterval(function () {
+if (op >= 1) {
+clearInterval(timer);
+}
+elem.style.opacity = op;
+elem2.style.opacity = op;
+op = op + 0.02;
+}, 1);
+}
+return whiteDiv
+}
+
+function desAlert(){
+ let op = 1;
+ let timer = setInterval(function () {
+ if (op <= 0) {
+ clearInterval(timer);
+ document.body.removeChild(fullScreenDiv)
+ }
+ fullScreenDiv.style.opacity = op;
+ op = op - 0.02;
+ }, 1);
+ return true
+}
+</script>
+</html>

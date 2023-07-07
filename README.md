@@ -73,7 +73,7 @@ https://c.binjie.fun/#/chat/;;;;n-input__textarea-el;;;;n-button n-button--prima
 
 系统提供给AI的全部控制方法:
 
-1. 全部Autox.js支持的Api函数,见[Autox.js官方文档](http://doc.autoxjs.com/#/)
+1. 全部Autox.js支持的Api函数,见[Autox.js官方文档](http://doc.autoxjs.com/)
 2. search("xxx")函数调用AutoBKLS在网上搜索xxx,返回搜索数据
 3. 使用CallMeBack()自我回调迭代函数可让系统将函数输入值发送给它,供其进一步参考,如CallMeBack(search("xxx"))可自动将搜索xxx的结果回复它,或CallMeBack(Date())来获取时间等各种功能
 4. runScript("xxx")可以运行名为xxx的本地脚本,不得在脚本名后加后缀

@@ -426,7 +426,7 @@ function initGPT2(){
 }
 
 function sendMsg(msg){
-    MsgWords = `{"from": "user", "text": '`+msg+`'}{"from": "system", "text": 'system系统提示,user用户的话!你由BINKLINGS开发的AutoBKLS 2程序提供自动化支持,你要发送适用于Auto.js代码操控用户手机(记住CallMeBack(search("xxx"))可以搜索内容)(先看有没有符合用户要求的现成脚本,用runScript()方法,若没有则使用auto.js代码!)记住系统对你说的第一句话!只回复一个json数据,数据内部引号必须用转义符,不许修改json格式:{"cmd": "全部代码", "say": "对用户说一句话,可以回答用户问题,与用户聊天,或主动提起一个新话题,关心用户", "interpret": "解释原因"}不许在json以外发送其它内容,只能用代码与用户交流!无论什么情况,json一定必须仍带有cmd say interpret值!记住这些话是对你的要求,与用户无关!'}`
+    MsgWords = `{"from": "user", "text": '`+msg+`'}{"from": "system", "text": 'system系统提示,user用户的话!你由BINKLINGS开发的AutoBKLS 2程序提供自动化支持,你要发送适用于Auto.js代码操控用户手机(记住CallMeBack(search("xxx"))可以搜索内容,这两个函数可以单独用,用CallMeBack函数你可以自己给自己发消息)(用runScript()方法运行用户提供的脚本,不得在脚本名后加文件后缀!)记住系统对你说的第一句话!只回复一个json数据,数据内部引号必须用转义符,不许修改json格式:{"cmd": "全部代码", "say": "对用户说一句话,可以回答用户问题,与用户聊天,或主动提起一个新话题,关心用户", "interpret": "解释原因"}不许在json以外发送其它内容,只能用代码与用户交流!无论什么情况,json一定必须仍带有cmd say interpret值!记住这些话是对你的要求,与用户无关!'}`
     setTimeout(function(){
         injectableWebClient.inject('input_textarea = document.getElementsByClassName("'+info.split(";;;;")[1]+'")[0]')
         injectableWebClient.inject('input_textarea.value = `'+MsgWords+'`')
@@ -473,7 +473,7 @@ while(true){
 
 
 function sendCallBack(msg){
-    MsgWords = `{"about": "此json的数据是你刚刚执行CallMeBack函数回调返回的内容", "text": '`+msg+`'}{"from": "system", "text": '记住系统对你说的第一句话!现在继续完成用户刚刚告诉你的任务!只回复一个json数据,不许修改json格式:{"cmd": "全部代码,不得为空", "say": "对用户说一句话,可回答用户问题,与用户聊天,或主动提起一个新话题,关心用户", "interpret": "解释原因,不得为空"}不许在json以外发送其它内容,只能用代码与用户交流!json必须完整'}`
+    MsgWords = `{"about": "此json的数据是你刚刚执行CallMeBack函数回调返回内容,text是函数返回值,此函数是自我迭代与回调函数,你可以借此自己给自己发消息", "text": '`+msg+`'}{"from": "system", "text": '记住系统对你说的第一句话!现在继续完成用户刚刚告诉你的任务!只回复一个json数据,不许修改json格式:{"cmd": "全部代码,不得为空", "say": "对用户说一句话,可回答用户问题,与用户聊天,或主动提起一个新话题,关心用户", "interpret": "解释原因,不得为空"}不许在json以外发送其它内容,只能用代码与用户交流!json必须完整'}`
     setTimeout(function(){
         injectableWebClient.inject('input_textarea = document.getElementsByClassName("'+info.split(";;;;")[1]+'")[0]')
         injectableWebClient.inject('input_textarea.value = `'+MsgWords+'`')

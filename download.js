@@ -6,26 +6,69 @@
     The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
 */
 
-//This script is designed to download the files needed for GPT mode, and may be used to download various files later
-var i = confirm("AutoBKLS需要从服务器上下载文件,来提供GPT AI模式服务")
-if(i==true){
-    var i = confirm("继续使用代表您已阅读并同意适用于AutoBKLS的开源协议 <GNU General Public License v3.0> ,若已阅读并同意,点击\"确定\"")
+importClass(java.io.FileOutputStream);
+importClass(java.net.URL);
+
+byteSum = 0;
+byteRead = 0;
+buffer = util.java.array('byte', 1024);
+var url = 'https://www.binklings.com/http/B/main.zip';
+var filePath = files.path("./main.zip");
+download()
+
+function download(){
+    var i = confirm("AutoBKLS需要从github.io服务器上下载文件,来更新版本.继续使用代表您已阅读并同意适用于AutoBKLS的开源协议 <GNU General Public License v3.0> ,若已阅读并同意,点击\"确定\"")
     if(i==true){
         toast("开始下载")
     }else{
         alert("抱歉,BINKLINGS不能继续为您提供该服务")
         exit()
     }
-    var url = "https://cdn.jsdelivr.net/gh/BINKLINGS/AutoBKLS@2.0.0Alpha1/GPT/main.js"
-    var res = http.get(url);
-    if (res.statusCode == 200) {
-        toast("请求成功")
-        var path = "./GPT/main.js";
-        var file = open(path, "w");
-        file.write(res.body.string());
-        file.close();
-        alert("下载完成")
-    } else {
-        alert("请求失败:" + res.statusMessage);
+    progress = 0
+    
+    downloadDialog = dialogs.build({
+            title: "下载中...",
+            progress: {
+                max: 100,
+                showMinMax: true
+            },
+            autoDismiss: false
+        })
+        .show();
+    let setProgress = setInterval(() => {
+        downloadDialog.setProgress(progress*100)
+        if (progress >= 1) {
+            clearInterval(setProgress)
+            downloadDialog.title = "安装中"
+            unzip()
+        }
+    }, 20)
+    threads.start(function() {
+        var myUrl = new URL(url);
+        var conn = myUrl.openConnection();
+        inStream = conn.getInputStream();
+        fs = new FileOutputStream(filePath);
+        connLength = conn.getContentLength();
+        while ((byteRead = inStream.read(buffer)) != -1) {
+            byteSum += byteRead;
+            fs.write(buffer, 0, byteRead);
+            progress = byteSum / connLength;
+        }
+    })
+}
+
+//更新Engine GPT AutoBKLS_UI Alpha.js
+function unzip(){
+    files.removeDir("./Engine")
+    files.removeDir("./GPT")
+    files.removeDir("./AutoBKLS_UI")
+    files.remove("./Alpha.js")
+    zip = zips.X(filePath, files.cwd())
+    if(zip==0){
+        downloadDialog.title = "更新完成"
+        sleep(1000)
+        exit()
+    }else{
+        alert("错误","错误代码: "+zip+"\n软件可能已经损坏")
     }
 }

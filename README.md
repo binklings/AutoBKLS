@@ -73,6 +73,7 @@ https://c.binjie.fun/#/chat/;;;;n-input__textarea-el;;;;n-button n-button--prima
 7. AI可以自动阅读其搜索结果, 但请说清楚要求
 8. AI可以自我回调和迭代, 但请说清楚要求
 9. AI可以运行本地已有脚本, 但请说清楚运行方法
+10. 点击Awaiting字样可进入语音对话模式
 
 系统提供给AI的全部控制方法:
 
@@ -121,6 +122,9 @@ switch (true) {
           break;
       case data[0]=="var":
           alert("定义一个新变量,在其它节点通过 %%x/ 即可调用名为x的变量,此节点输入新变量名")
+          break;
+      case data[0]=="js":
+          alert("调用autox.js进行函数运算,此处若要AutoBKLS与js通信,请用 %%x/ 来调用名为x的AutoBKLS中的变量在js中执行,在js中用return方法可回调AutoBKLS,默认将返回值设到名为jsr的变量中,此处输入js代码,可使用转义换行符\\n和逗号%2C")
           break;
       default:
           alert("这是一个损坏的节点,请查阅文档获取相关信息")

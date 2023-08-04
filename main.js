@@ -1,17 +1,13 @@
-/*
-    THIS FILE IS PART OF AutoBKLS PROJECT
-    THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0
-    YOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ >
-    Copyright (c) 2023 binklings.com
-    The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
-*/
+engines.execScriptFile("./Alpha.js")
+engines.myEngine().forceStop()
+//此版本停用已下代码
 
-"ui";
+/*
 importClass(android.webkit.DownloadListener);
 ui.layout(
-<viewpager id="viewpager">
+<viewpager id="viewpager" bg="#000000">
     <vertical>
-        <webview w="*" h="*" id="web"/>
+        <webview w="*" h="*" id="web" bg="#000000"/>
     </vertical>
     <vertical bg="#000000" gravity="center_vertical">
         <text textColor="#FFFFFF" gravity="center" textSize="16sp">欢迎加入内测</text>
@@ -81,7 +77,6 @@ threads.start(function(){
 
 function next(){
     storage.put("finished", true);
-    setTimeout(function(){
-        engines.execScriptFile("./Alpha.js")
-    },1000)
+    engines.execScriptFile("./Alpha.js")
 }
+*/

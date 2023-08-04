@@ -13,6 +13,10 @@
     {
       "form": "file:///android_asset/models",
       "to": "/models"
+    },
+    {
+      "form": "file:///android_asset/mlkit-google-ocr-models",
+      "to": "/mlkit-google-ocr-models"
     }
   ],
   "buildDir": "build",
@@ -30,7 +34,7 @@
     "displaySplash": true,
     "hideAccessibilityServices": false,
     "hideLauncher": false,
-    "hideLogs": false,
+    "hideLogs": true,
     "stableMode": false,
     "volumeUpcontrol": false,
     "permissions": [
@@ -50,7 +54,8 @@
     "libhiai.so",
     "libhiai_ir.so",
     "libhiai_ir_build.so",
-    "libNative.so"
+    "libNative.so",
+    "libmlkit_google_ocr_pipeline.so"
   ],
   "main": "main.js",
   "name": "AutoBKLS",
@@ -63,6 +68,6 @@
     "keystore": null
   },
   "sourcePath": "/storage/emulated/0/脚本/AutoBKLS/main.js",
-  "versionCode": 2000001,
-  "versionName": "2.0.0Alpha1"
+  "versionCode": 2000011,
+  "versionName": "2.0.0Beta1"
 }

@@ -1,0 +1,4 @@
+toast("这是一个弹窗示例")
+function search(searchStr){storage=storages.create("temp");storage.put("searchWeb","");storage.put("searchContent",searchStr);engines.execScriptFile("./GPT/searchWeb.js");while(true){if(storage.get("searchWeb")!==""){var window=floaty.window(<frame><button id="action" text="查看结果" w="90" h="40" bg="#77ffffff"/></frame>);window.action.click(()=>{app.openUrl("https://www.bing.com/search?q="+searchStr)});window.action.longClick(()=>{toast("已关闭");exit()});setInterval(()=>{},1000);return storage.get("searchWeb")}sleep(100)}}
+function CallMeBack(CallBackStr){storage=storages.create("temp");storage.put("CallBack",CallBackStr)}
+function runScript(scriptName){if(scriptName.includes(".js")){scriptName=scriptName.split(".js")[0]};storage2 = storages.create("files");storage2.put("last_file",scriptName);engines.execScriptFile("./Engine/coder.js")}

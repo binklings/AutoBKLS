@@ -35,6 +35,7 @@
 </div>
 </body>
 <script defer>
+alert("点击节点名称可以查看使用文档")
 var url = location.search;
 var theRequest = new Object();
 if (url.indexOf("?") != -1){
@@ -42,10 +43,7 @@ if (url.indexOf("?") != -1){
    //code(files_text)该方法因url长度限制已废弃,改用新方法请见Editor.js的第30行代码附近
 }
 //code('sleep,1000;click,100 200')
-/*code格式:
- 节点名1(解释内容),数据内容1,数据输入提示文字1;节点名2(解释内容),数据内容2,数据输入提示文字2;
- 分号隔开行,逗号隔开列,节点名的括号里的提示内容不被读取,可用于翻译
-*/
+
 //final_length实时统计长度
 //i只增不减,每个tr的唯一id,不可重复利用
 function code(text){
@@ -87,6 +85,10 @@ function code(text){
       case data[0]=="clickCtrl":
           data[0] += "(点击控件)"
           data[2] = "控件id"
+          break;
+      case data[0]=="setText":
+          data[0] += "(设置文本)"
+          data[2] = "文本"
           break;
       case data[0]=="goto":
           data[0] += "(跳转执行)"
@@ -137,11 +139,12 @@ function adding_tr(id){
   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['clickCtrl','tv.danmaku.bili:id/frame_recommend'],'`+id+`')">点击控件</button>
   <br>
   <br>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['setText','Hello'],'`+id+`')">设置文本</button>
   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['goto','0'],'`+id+`')">跳转</button>
-  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['var','x'],'`+id+`')">定义变量</button>
   <br>
   <br>
   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['js','return Number(%%x/)+10'],'`+id+`')">js计算</button>
+  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" onclick="add_tr(['var','x'],'`+id+`')">定义变量</button>
   <br>
   <br>
   <h6>为保证正常运行,当前测试版本删减了很多节点,以确保新功能不受干扰</h6>
@@ -181,6 +184,10 @@ function add_tr(data,id){
       case data[0]=="clickCtrl":
           data[0] += "(点击控件)"
           data[2] = "控件id"
+          break;
+      case data[0]=="setText":
+          data[0] += "(设置文本)"
+          data[2] = "文本"
           break;
       case data[0]=="goto":
           data[0] += "(跳转执行)"
@@ -298,6 +305,9 @@ function showDoc(node){
       case data[0]=="clickCtrl":
           alert("点击一个控件,控件是安卓中任何一个界面的组成部分,输入viewId(即控件id,可使用悬浮窗工具获取屏幕上某个控件的id,若id为null则此方法不可用)")
           break;
+      case data[0]=="setText":
+          alert("设置页面中输入框内的文字,输入文字")
+          break;
       case data[0]=="goto":
           alert("跳转至第x行执行,从第0算起,即第一行是0")
           break;
@@ -305,7 +315,7 @@ function showDoc(node){
           alert("定义一个新变量,在其它节点通过 %%x/ 即可调用名为x的变量,此节点输入新变量名")
           break;
       case data[0]=="js":
-          alert("调用autox.js进行函数运算,此处若要AutoBKLS与js通信,请用 %%x/ 来调用名为x的AutoBKLS中的变量在js中执行,在js中用return方法可回调AutoBKLS,默认将返回值设到名为jsr的变量中,此处输入js代码,可使用转义换行符\\n")
+          alert("调用autox.js进行函数运算,此处若要AutoBKLS与js通信,请用 %%x/ 来调用名为x的AutoBKLS中的变量在js中执行,在js中用return方法可回调AutoBKLS,默认将返回值设到名为jsr的变量中,此处输入js代码,可使用转义换行符\\n和逗号%2C")
           break;
       default:
           alert("这是一个损坏的节点,请查阅文档获取相关信息")

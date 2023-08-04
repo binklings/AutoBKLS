@@ -17,7 +17,6 @@ variables.put("a",1234)
 function start(codes){
     all_codes = codes.split(";")
     running = threads.start(function(){
-        console.show()
         var window = floaty.window(
             <frame>
                 <button id="action" text="停止运行" w="90" h="40" bg="#77ffffff"/>
@@ -38,13 +37,13 @@ function start(codes){
             var now_codes = all_codes[i].split(",")
             switch (true) {
                 case now_codes[0]=="sleep":
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     now_codes[1] = setVars(now_codes[1])
                     sleep(now_codes[1])
                     break;
                 case now_codes[0]=="click":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     if(now_codes[1].includes(" ")){
                         click(Number(now_codes[1].split(" ")[0]),Number(now_codes[1].split(" ")[1]))
                     }else{
@@ -53,7 +52,7 @@ function start(codes){
                     break;
                 case now_codes[0]=="click_text":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     clickon(now_codes[1].split(" ")[0],Number(now_codes[1].split(" ")[1]),Number(now_codes[1].split(" ")[2]),Number(now_codes[1].split(" ")[3]),Number(now_codes[1].split(" ")[4]))
                     break;
                 case now_codes[0]=="get_text":
@@ -74,33 +73,49 @@ function start(codes){
                     break;
                 case now_codes[0]=="press":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     press(Number(now_codes[1].split(" ")[0]) + random(-Number(now_codes[1].split(" ")[2]), Number(now_codes[1].split(" ")[2])), Number(now_codes[1].split(" ")[1]) + random(-Number(now_codes[1].split(" ")[3]), Number(now_codes[1].split(" ")[3])), Number(now_codes[1].split(" ")[4]) + random(-Number(now_codes[1].split(" ")[5]), Number(now_codes[1].split(" ")[5])))
                     break;
                 case now_codes[0]=="swipe":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     swipe(Number(now_codes[1].split(" ")[0]),Number(now_codes[1].split(" ")[1]),Number(now_codes[1].split(" ")[2]),Number(now_codes[1].split(" ")[3]),Number(now_codes[1].split(" ")[4]))
                     break;
                 case now_codes[0]=="launch":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     launch(now_codes[1])
                     break;
                 case now_codes[0]=="clickCtrl":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     id(now_codes[1]).findOne().click()
+                    break;
+                case now_codes[0]=="setText":
+                    now_codes[1] = setVars(now_codes[1])
+                    toastLog(all_codes[i])
+                    setText(now_codes[1])
                     break;
                 case now_codes[0]=="goto":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     i=now_codes[1]-1
                     break;
                 case now_codes[0]=="var":
                     now_codes[1] = setVars(now_codes[1])
-                    console.log(all_codes[i])
+                    toastLog(all_codes[i])
                     variables.put(now_codes[1],null)
+                    break;
+                case now_codes[0]=="js":
+                    now_codes[1] = setVars(now_codes[1])
+                    toastLog(all_codes[i])
+                    now_codes[1] = now_codes[1].replace(/\\n/g,"\n")
+                    now_codes[1] = now_codes[1].replace(/\\"/g,"\"")
+                    now_codes[1] = now_codes[1].replace(/\\'/g,"\'")
+                    now_codes[1] = now_codes[1].replace(/%2C/g,",")
+                    now_codes[1] = now_codes[1].replace(/%3B/g,";")
+                    files.write("./Engine/cmd.js", 'sys_jsr_return = sys_jsr_fun()\nfunction sys_jsr_fun(){\n'+now_codes[1]+'\n}\nvariables = storages.create("variables")\nvariables.put("jsr",sys_jsr_return)')
+                    engines.execScriptFile("./Engine/cmd.js")
                     break;
             }
         }

@@ -52,8 +52,8 @@ threads.start(function(){
 var versionurl = "https://binklings.com/http/B/version.txt";
 var version = http.get(versionurl);
 if (version.statusCode == 200){
-    var versionnum = String(version.body.string())
-    if(versionnum.includes("1.1.0")){
+    var versionnum = String(version.body.string()).split(";")[0]
+    if(versionnum=="V2.0.0Beta1"){
         $ui.post(() => {
             toast("版本检查成功")
             if(checkFailed == true){
@@ -61,8 +61,9 @@ if (version.statusCode == 200){
             }
         })
     }else{
+        checkFailed = false
         alert("检查到新版本!", versionnum)
-        app.openUrl("https://binklings.com/products/kz/index.html");
+        engines.execScriptFile("./download.js")
     }
 }else{
     toast("ERR:无法检查更新")
@@ -98,9 +99,7 @@ function init(){
         start5()
         start6()
     }, 1000);
-    alert("内测版本 欢迎分享/视频评测此软件","当前仅能抢先体验内测版本已开源的部分功能,不能保证100%稳定,如果觉得哪些功能做得不错可以去b站之类分享(可以视频评测),帮up提高热度,也欢迎反馈bug,帮助改进软件😊")
-    alert("开源提示","binklings/AutoBKLS is licensed under the GNU General Public License v3.0\nPermissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.\nPermissions:\n    Commercial use\n    Modification\n    Distribution\n    Patent use\n    Private use\nLimitations:\n    Liability\n    Warranty\nConditions:\n    License and copyright notice\n    State changes\n    Disclose source\n    Same license\nThis is not legal advice.")
-    alert("开源地址: https://github.com/binklings/AutoBKLS","THIS PROGRAM IS FREE SOFTWARE, binklings/AutoBKLS, IS LICENSED UNDER the GNU General Public License v3.0 \nYOU SHOULD HAVE RECEIVED A COPY OF GNU General Public License, IF NOT, PLEACE TAKE A LOOK< https://www.gnu.org/licenses/ > \nCopyright (c) 2023 binklings.com \nThe BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program")
+    alert("欢迎分享/视频评测此软件","永久免费开源!不能保证100%稳定,如果觉得哪些功能做得不错可以去b站之类分享(可以视频评测),帮up提高热度,也欢迎反馈bug,帮助改进软件😊(以后可能上架应用市场)")
 }
 
 function start(){
@@ -111,9 +110,9 @@ function start(){
                     ui.webview.loadUrl(`file://${webRoot}/local.html?`+local_files_string)
                     threads.start(function(){
                         var newLocal_name = rawInput("脚本名称")
-                        if(newLocal_name.includes(";")||newLocal_name.includes("local_files")){
+                        if(newLocal_name.includes(";")||newLocal_name.includes("local_files")||newLocal_name.includes(".")){
                             $ui.post(() => {
-                                alert("不得包含';'或'local_files'")
+                                alert("不得包含';'或'local_files'或'.'")
                             })
                         }else{
                             files.create("/sdcard/AutoBKLS/"+newLocal_name)
@@ -206,9 +205,24 @@ function start5(){
     })
 }
 
+alert("由于版本兼容性问题,如需使用自动赚钱(快手极速版)服务,请先手动签到,关闭快手极速版,再点击本软件的自动赚钱按钮启动服务,随后即可一直挂机自动收益")
+function start6(){
+    threads.start(function(){
+        while(true){
+            $ui.post(() => {
+                if(ui.webview.getUrl().includes("#ksjsb")){
+                    ui.webview.loadUrl(`file://${webRoot}/home.html?`+local_files_string)
+                    engines.execScriptFile("./Engine/ksjsb.js")
+                }
+            })
+            sleep(100)
+        }
+    })
+}
+
 
 ui.webview2.loadUrl(`file://${webRoot}/SCmd.html`)
-function start6(){
+function start7(){
     threads.start(function(){
         while(true){
             $ui.post(() => {
@@ -273,3 +287,6 @@ threads.start(function(){
     sleep(3000)
     }
 })
+
+files.create("/sdcard/AutoBKLS/快手极速版")
+files.write("/sdcard/AutoBKLS/快手极速版","launch,com.kuaishou.nebula;sleep,7000;clickCtrl,com.kuaishou.nebula:id/left_btn;sleep,1000;click,去赚钱;sleep,4000;click,开宝箱得金币;sleep,1000;js,back();sleep,1000;clickCtrl,com.kuaishou.nebula:id/left_btn;sleep,1000;click,去赚钱;sleep,4000;click,看视频得5000金币;sleep,31000;js,back();sleep,1000;click,坚持退出;click,放弃奖励;sleep,1000;js,back();sleep,2000;js,for(i=0%3Bi<120%3Bi++){swipe(200%2C Math.round(device.height/1.5)%2C 200%2C 100%2C 100)%3Bsleep(5000)};sleep,600000;goto,3")

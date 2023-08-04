@@ -75,6 +75,7 @@ function showWindow(){
         if(i==0){
             engines.execScript("getCoordinates","getCoordinates()\n"+getCoordinates.toString())
         }else if(i==1){
+            sleep(3000)
             engines.execScript("getControl","getControl()\n"+getControl.toString())
         }
     }

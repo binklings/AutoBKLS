@@ -25,7 +25,7 @@
 |所需存储空间(现版本全部功能,安装包加后期占用)|100MB (20MB安装包＋80MB脚本/缓存/数据)|
 
 请在仓库的Releases中下载安装包
-安卓后请授予权限:
+安装后请授予权限:
 
 - [x] 
 |权限|原因|
@@ -51,15 +51,15 @@ GPT AI模式内测版说明
 ##### 配置
 自定义镜像站的配置数据格式为: 
 
-$$
+
 URL;;;;InputClass;;;;SendBtnClass
-$$
+
 即为 网站URL网址+";;;;"+网页中输入框的类名+";;;;"+网页中发送按钮的类名
 类名可使用浏览器的开发者工具获取
-示例配置方式(此镜像站为第三方作者制作, AutoBKLS与其无关, 用户可使用此配置方案, 但请遵守其规定, 也可以为其作者捐赠, 谢谢):
+示例配置方式:
 
 ```
-https://c.binjie.fun/#/chat/;;;;n-input__textarea-el;;;;n-button n-button--primary-type n-button--medium-type
+https://xxx.xxx.com/chat;;;;xxx-input;;;;xxx-send-btn
 ```
 
 ##### 使用技巧

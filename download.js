@@ -5,30 +5,33 @@
     Copyright (c) 2023 binklings.com
     The BINKLINGS or BINKLINGS GAMES in the relevant agreement documents of this project are equivalent to<binklings.com>, the author of this program
 */
+/*
 w = floaty.window(
     <vertical>
         <webview id="webView"/>
     </vertical>
 )
 w.setSize(0,0)
-webView = w.webView;
+webView = w.webView;*/
 
-download()
+//download()
 
 var versionurl = "https://binklings.com/http/B/version.txt";
 var version = http.get(versionurl);
 if (version.statusCode == 200){
     var cloudUrl = String(version.body.string()).split(";")[1]
+    app.openUrl(cloudUrl)
+    /*
     downloadDialog.title = "加载中..."
     ui.post(()=>{
         webView.loadUrl(cloudUrl)
-    })
+    })*/
 }else{
     toast("ERR:无法检查更新")
     exit()
 }
 
-
+/*
 importClass(android.net.Uri);
 importClass(android.webkit.DownloadListener);
 importClass(android.webkit.WebView);
@@ -92,4 +95,4 @@ function download(){
             autoDismiss: false
         })
         .show();
-}
+}*/

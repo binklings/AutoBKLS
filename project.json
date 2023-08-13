@@ -39,7 +39,6 @@
     "volumeUpcontrol": false,
     "permissions": [
       "accessibility_services",
-      "background_start",
       "draw_overlay"
     ],
     "serviceDesc": "脚本",
@@ -68,6 +67,6 @@
     "keystore": null
   },
   "sourcePath": "/storage/emulated/0/脚本/AutoBKLS/main.js",
-  "versionCode": 2000011,
-  "versionName": "2.0.0Beta1"
+  "versionCode": 2000012,
+  "versionName": "2.0.0Beta2"
 }

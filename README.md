@@ -24,7 +24,7 @@
 |运行内存 RAM|2GB|
 |所需存储空间(现版本全部功能,安装包加后期占用)|100MB (20MB安装包＋80MB脚本/缓存/数据)|
 
-请在官网链接https://www.binklings.com/products/kz/下载安装包
+请在官网链接https://www.binklings.com/products/kz/ 下载安装包
 安装后请授予权限:
 
 - [x] 

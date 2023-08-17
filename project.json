@@ -31,8 +31,7 @@
     "build"
   ],
   "launchConfig": {
-    "displaySplash": true,
-    "hideAccessibilityServices": false,
+    "displaySplash": false,
     "hideLauncher": false,
     "hideLogs": true,
     "stableMode": false,
@@ -67,6 +66,6 @@
     "keystore": null
   },
   "sourcePath": "/storage/emulated/0/脚本/AutoBKLS/main.js",
-  "versionCode": 2000012,
-  "versionName": "2.0.0Beta2"
+  "versionCode": 2000013,
+  "versionName": "2.0.0Beta3"
 }

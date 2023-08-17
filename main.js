@@ -48,8 +48,10 @@ threads.start(function(){
 var versionurl = "https://binklings.com/http/B/version.txt";
 var version = http.get(versionurl);
 if (version.statusCode == 200){
-    var versionnum = String(version.body.string()).split(";")[0]
-    if(versionnum=="V2.0.0Beta2"){
+    var reply = version.body.string()
+    var versionnum = String(reply).split(";")[0]
+    var describe = String(reply).split(";")[2]
+    if(versionnum=="V2.0.0Beta3"){
         $ui.post(() => {
             toast("版本检查成功")
             if(checkFailed == true){
@@ -58,8 +60,11 @@ if (version.statusCode == 200){
         })
     }else{
         checkFailed = false
-        alert("检查到新版本! 下载密码: 0000", versionnum)
-        engines.execScriptFile("./download.js")
+        if(confirm("检查到新版本: "+versionnum+"\n"+describe+"\n立即更新?")){
+            alert("下载密码: 0000")
+            var cloudUrl = String(reply).split(";")[1]
+            app.openUrl(cloudUrl)
+        }
     }
 }else{
     toast("ERR:无法检查更新")
@@ -87,7 +92,8 @@ function init(){
     ui.webview.loadUrl(`file://${webRoot}/index.html?50`)
     ui.skip.setText("初始化")
     setTimeout(function(){
-        ui.webview.loadUrl(`file://${webRoot}/home.html?`+local_files_string)
+        ui.webview.loadUrl(`file://${webRoot}/homenew.html?`+local_files_string)
+        toast("当前版本 2.0.0Beta4")
         start()
         start2()
         start3()
@@ -95,7 +101,6 @@ function init(){
         start5()
         start6()
     }, 1000);
-    alert("欢迎分享/视频评测此软件","永久免费开源!不能保证100%稳定,如果觉得哪些功能做得不错可以去b站之类分享(可以视频评测),帮up提高热度,也欢迎反馈bug,帮助改进软件😊(以后可能上架应用市场)")
 }
 
 function start(){
@@ -213,7 +218,21 @@ function start6(){
             $ui.post(() => {
                 if(ui.webview.getUrl().includes("#ksjsb")){
                     ui.webview.loadUrl(`file://${webRoot}/home.html?`+local_files_string)
-                    engines.execScriptFile("./Engine/ksjsb.js")
+                    threads.start(()=>{
+                        var im1 = dialogs.multiChoice("选择您的需求(可多选)",["快手极速版","抖音极速版"])
+                        sim1 = String(im1)
+                        if(sim1==""){
+                            alert("?😢")
+                        }else{
+                            var settings = storages.create("设置")
+                            settings.put("option",sim1)
+                            if(sim1.includes("0")){
+                                engines.execScriptFile("./Engine/ksjsb.js")
+                            }else{
+                                engines.execScriptFile("./Engine/dyjsb.js")
+                            }
+                        }
+                    })
                 }
             })
             sleep(100)

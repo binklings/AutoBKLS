@@ -15,7 +15,7 @@
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
   </head>
 <body bgcolor="black" style="background-color: black;background-image: url(../res/bg1.jpeg);background-size:cover">
- <div align="center" style="padding: 5px">
+ <div align="center" style="padding: 5px" id="maindiv">
   <div id="p3" class="mdl-progress mdl-js-progress" style="top: 40%;width: 100%;position: fixed"></div>
   <div style="height: 40%"></div>
    <h5 style="color: white;" id="text">Checking for updates</h5>
@@ -26,6 +26,16 @@
    if (url.indexOf("?") != -1){
     var str = url.substr(1);
     i = Number(str)
+    if(i==50){
+        io = 1
+        ioi = setInterval(function(){
+        document.getElementById('maindiv').style.opacity = io
+        io-=0.005
+        if(io>=1){
+            clearInterval(ioi)
+        }
+},1)
+    }
    }
    document.querySelector('#p3').addEventListener('mdl-componentupgraded', function() {
     this.MaterialProgress.setProgress(i);

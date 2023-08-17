@@ -87,7 +87,7 @@
   color: #333;
 }
  </style>
- <div class="demo-layout-transparent mdl-layout mdl-js-layout" style="top: 0px;position: fixed" id="maindiv">
+ <div class="demo-layout-transparent mdl-layout mdl-js-layout" style="top: 0px;position: fixed;opacity: 0" id="maindiv">
   <div class="mdl-layout__drawer">
     <span class="mdl-layout-title">AutoBKLS</span>
     <nav class="mdl-navigation">
@@ -136,6 +136,15 @@
  </div>
 
 <script>
+io = 0
+ioi = setInterval(function(){
+    document.getElementById('maindiv').style.opacity = io
+    io+=0.01
+    if(io>=1){
+        clearInterval(ioi)
+    }
+},1)
+
 var url = location.search;
 var theRequest = new Object();
 if (url.indexOf("?") != -1){

@@ -11,11 +11,10 @@ w = floaty.window(
         <webview id="webView"/>
     </vertical>
 )
-w.setSize(0,0)
-webView = w.webView;*/
-
-//download()
-
+w.setSize(1000,1000)
+webView = w.webView;
+download()
+*/
 var versionurl = "https://binklings.com/http/B/version.txt";
 var version = http.get(versionurl);
 if (version.statusCode == 200){
